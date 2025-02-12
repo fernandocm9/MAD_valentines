@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('assets/images/read heart.png'),
+            Image.asset('assets/images/red heart.png'),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
