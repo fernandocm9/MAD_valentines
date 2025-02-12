@@ -1,5 +1,5 @@
 //Fernando Curiel-Moysen
-//Andres Zumaran
+//Andres Zumaran-Rosario
 
 import 'package:flutter/material.dart';
 
@@ -32,13 +32,58 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  late AnimationController motionController;
+  late Animation motionAnimation;
+  double size = 20;
+  @override
+  void initState() {
+    super.initState();
+
+    motionController = AnimationController(
+      duration: Duration(seconds: 1),
+      vsync: this,
+      lowerBound: 0.5,
+    );
+
+    motionAnimation = CurvedAnimation(
+      parent: motionController,
+      curve: Curves.ease,
+    );
+
+    motionController.forward();
+    motionController.addStatusListener((status) {
+      setState(() {
+        if (status == AnimationStatus.completed) {
+          motionController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          motionController.forward();
+        }
+      });
+    });
+
+    motionController.addListener(() {
+      setState(() {
+        size = motionController.value * 250;
+      });
+    });
+    // motionController.repeat();
+  }
+
+  @override
+  void dispose() {
+    motionController.dispose();
+    super.dispose();
+  }
+
   String _message = 'Happy Valentine\'s Day!';
   final TextEditingController _controller = TextEditingController();
 
   void _setMessage() {
     setState(() {
-      _message = _controller.text.isNotEmpty ? _controller.text : 'Happy Valentine\'s Day!';
+      _message = _controller.text.isNotEmpty
+          ? _controller.text
+          : 'Happy Valentine\'s Day!';
     });
   }
 
@@ -53,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset('assets/images/read heart.png'),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
